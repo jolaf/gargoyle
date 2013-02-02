@@ -1,0 +1,83 @@
+@font-face { /* Modified from Font Squirrel http://www.fontsquirrel.com */
+	font-family: Rurintania;
+	src: url('rurintania.eot'); /* IE9 compat modes */
+	src: local('Rurintania'),
+		local('RurintaniaRegular'),
+		local('Rurintania Regular'),
+		url('rurintania-webfont.eot?#iefix') format('embedded-opentype'), /* IE6-8 */
+		url('rurintania-webfont.woff') format('woff'), /* modern browsers */
+		url('rurintania-webfont.ttf') format('truetype'), /* Safari, Android, iOS */
+		url('rurintania-webfont.svgz#rurintaniaregular') format('svg'), /* legacy iOS */
+		url('rurintania-webfont.svg#rurintaniaregular') format('svg'); /* legacy iOS */
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	color: white;
+	background: black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+    background: url('background.jpg');
+}
+
+div.visible {
+	display: block;
+}
+
+.invisible {
+	display: none;
+}
+
+#startupBlockID, #workingBlockID {
+	width: 100%;
+	height: 100%;
+}
+
+#startupBlockID {
+	color: white;
+	background: black;
+	text-align: center;
+}
+
+#loadingProgressID {
+	width: 100%;
+	padding: 1em;
+	text-align: center;
+	font-weight: bold;
+}
+
+#loggerID {
+	display: inline-block;
+	text-align: left;
+}
+
+#workingBlockID {
+	background: center no-repeat url('gargoyle.png');
+	background-size: contain;
+	text-align: center;
+	outline: none;
+}
+
+#questionBlockID {
+	width: 100%;
+	position: absolute;
+	bottom: 6%;
+	text-align: center;
+}
+
+#questionID {
+	background: url('question.png') no-repeat 0 6px;
+	font-family: Rurintania, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 32px;
+	width: 279px;
+	height: 86px;
+	padding: 0 60px;
+	border: none;
+	text-transform: lowercase;
+	outline: none;
+}
