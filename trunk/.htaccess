@@ -1,5 +1,7 @@
 AddType application/font-woff woff
 AddEncoding gzip svgz
+
+AddDefaultCharset Off
 DirectoryIndex gargoyle.html
 
 ExpiresActive On
