@@ -22,7 +22,7 @@ body {
 	color: white;
 	background: black;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-    background: url('background.jpg');
+	background: url('background.jpg');
 }
 
 div.visible {
@@ -39,8 +39,6 @@ div.visible {
 }
 
 #startupBlockID {
-	color: white;
-	background: black;
 	text-align: center;
 }
 
@@ -80,4 +78,5 @@ div.visible {
 	border: none;
 	text-transform: lowercase;
 	outline: none;
+	color: black;
 }
