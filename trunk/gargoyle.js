@@ -256,14 +256,12 @@ function mouseButtonHandler(e) {
 
 function keyDownHandler(e) {
     e = e || window.event;
-    debug('#d ' + e.keyCode + ' ' + (properKeyCodes.indexOf(e.keyCode) >= 0));
     return properKeyCodes.indexOf(e.keyCode) >= 0;
 }
 
 function keypressHandler(e) {
     resetQuestionTimeout(true);
     e = e || window.event;
-    debug('#p ' + e.charCode + ' ' + e.keyCode);
     prevent(e);
     if (!e.altKey && !e.ctrlKey && !e.metaKey) {
         if (question.value.length < question.maxLength) {
