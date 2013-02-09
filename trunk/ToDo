@@ -1,12 +1,9 @@
 
-Chrome - esc doesn't work
+Chrome has cursor non blinking
 
-Opera sometimes whipes start of input
+Opera sometimes wipes start of input
 Opera fires onended event prematurely
-
-Opera and IE allow left click and drag in input
+Opera can't hide cursor
 
 IE allows right clicks in input
-
-Do answers with single space-separated string
-
+IE loses cursor on right click outside

@@ -1,3 +1,6 @@
+//
+// JavaScript code file for Gargoyle
+//
 var WELCOME = 'Welcome';
 var GRANTED = 'Granted';
 var DENIED = 'Denied';
@@ -7,6 +10,8 @@ var AUDIO_TYPES = {'audio/mpeg': 'mp3', 'audio/ogg': 'ogg'};
 var BACKSPACE = 8;
 var ENTER = 13;
 var ESCAPE = 27;
+
+var CONTROL_KEYS = [BACKSPACE, ENTER, ESCAPE];
 
 var DT = 100;
 var QUESTION_TIMEOUT = 60 * 1000; // 1 minute
@@ -39,8 +44,8 @@ function createL2CMap() {
 }
 
 function createProperKeyCodes() {
-    ret = [BACKSPACE, ENTER, ESCAPE];
-    for (var i = 65; i <=90; i++) {
+    ret = CONTROL_KEYS.concat([59 /*ж*/, 186 /*ж*/, 188 /*б*/, 190 /*ю*/, 192 /*ё*/, 219 /*х*/, 221 /*ъ*/, 222 /*э*/]);
+    for (var i = 65; i <= 90; i++) {
         ret.push(i);
     }
     return ret;
@@ -54,17 +59,26 @@ function hide(block) {
     block.className = 'invisible';
 }
 
-function focus(e) {
-    question.focus();
-    prevent(e);
-}
-
 function prevent(e) {
     e = e || window.event;
     if (e) {
-        e.preventDefault();
-        e.stopPropagation();
+        if (e.preventDefault !== undefined) {
+            e.preventDefault();
+        }
+        if (e.stopPropagation !== undefined) {
+            e.stopPropagation();
+        }
+        if (e.returnValue !== undefined) {
+            e.returnValue = false;
+        }
     }
+    return false;
+}
+
+function focus(e) {
+    question.focus();
+    resetQuestionTimeout(true);
+    return prevent(e);
 }
 
 function delay(what) {
@@ -103,7 +117,7 @@ function playAudio(audio, what) {
 function main() {
     // HTML references
     body = document.getElementsByTagName('body')[0];
-    body.removeAttribute('onload'); // Don't even try to work after saving modified page
+    body.removeAttribute('onload'); // don't even try to work after saving modified page
     startupBlock = document.getElementById('startupBlockID');
     loadingProgress = document.getElementById('loadingProgressID');
     logger = document.getElementById('loggerID');
@@ -134,9 +148,9 @@ function main() {
     medias = [[welcome], [granted], [denied]];
     for (var i = 0, riddle; riddle = RIDDLES[i++];) {
         riddle[0] = createAudio(riddle[0]);
-        var answers = riddle[1];
+        var answers = riddle[1] = riddle[1].split(' ');
         var maxLength = 0;
-        for (var j in riddle[1]) {
+        for (var j in answers) {
              answers[j] = answers[j].toLowerCase().trim();
              maxLength = Math.max(maxLength, answers[j].length);
         }
@@ -175,8 +189,8 @@ function waitForMedia(media) {
             debug('No audio loaded successfully, aborting');
             return;
         }
-        if (errors) { // avoid repeated click reaction
-            startupBlock.onclick = function() { delay(start) };
+        if (errors) {
+            startupBlock.onmousedown = start;
             debug(errors + ' errors found, click to continue');
         } else {
             setTimeout(start, 200); // needs to be investigated
@@ -186,7 +200,7 @@ function waitForMedia(media) {
     }
 }
 
-function start() {
+function start(e) {
     busy = null;
     answers =  null;
     questionTimeout = null;
@@ -194,37 +208,40 @@ function start() {
     welcome = medias[0][0];
     granted = medias[1][0];
     denied = medias[2][0];
-    question.onblur = focus;
-    question.onmousedown = mouseButtonHandler;
-    question.onmouseup = mouseButtonHandler;
+    question.onmousedown = focus;
+    question.onmouseup = focus;
     question.onkeydown = keyDownHandler;
-    question.onkeypress = keypressHandler;
+    question.onkeypress = keyPressHandler;
     workingBlock.tabIndex = 0; // to enable keypress
     latinToCyrillic = createL2CMap();
     properKeyCodes = createProperKeyCodes();
     hide(startupBlock);
     show(workingBlock);
     playAudio(welcome, idle);
-    workingBlock.onkeypress = tap;
+    workingBlock.onkeydown = tap;
     body.oncontextmenu = prevent;
+    return prevent(e);
 }
 
-function idle() {
+function idle(e) {
     resetQuestionTimeout();
     hide(questionBlock);
     busy = false;
-    workingBlock.onclick = tap;
+    workingBlock.onmousedown = tap;
     workingBlock.focus();
+    return prevent(e);
 }
 
 function tap(e) {
     e = e || window.event;
-    prevent(e);
-    if (busy || e && (e.altKey || e.ctrlKey || e.metaKey)) {
-        return;
+    if (e && (e.altKey || e.ctrlKey || e.metaKey)) {
+        return prevent(e);
+    }
+    if (busy) {
+        return true;
     }
     busy = true;
-    if (!answers) { // change riddle it it was answered
+    if (!answers) { // change riddle if it was answered
         if (!riddles.length) {
             for (var i = 0, riddle; riddle = RIDDLES[i++];) {
                 if (riddle[0]) {
@@ -238,6 +255,7 @@ function tap(e) {
         maxAnswerLength = riddle[2];
     }
     playAudio(audio, ask);
+    return true;
 }
 
 function ask() {
@@ -245,32 +263,17 @@ function ask() {
     question.value = '';
     show(questionBlock);
     focus();
-    workingBlock.onclick = focus;
-    resetQuestionTimeout(true);
-}
-
-function mouseButtonHandler(e) {
-    e = e || window.event;
-    return (e.which === 1 || e.button === 0);
+    workingBlock.onmousedown = focus;
 }
 
 function keyDownHandler(e) {
-    e = e || window.event;
-    return properKeyCodes.indexOf(e.keyCode) >= 0;
-}
-
-function keypressHandler(e) {
     resetQuestionTimeout(true);
     e = e || window.event;
-    prevent(e);
-    if (!e.altKey && !e.ctrlKey && !e.metaKey) {
-        if (question.value.length < question.maxLength) {
-            if (e.charCode >= 'А'.charCodeAt(0) && e.charCode <= 'я'.charCodeAt(0)) {
-                question.value += String.fromCharCode(e.charCode);
-            } else if (c = latinToCyrillic[e.charCode]) {
-                question.value += c; // map latins to cyrillic
-            }
-        }
+    var keyCode = e.keyCode;
+    if (properKeyCodes.indexOf(keyCode) < 0 || e.ctrlKey || e.altKey || e.metaKey) {
+        return prevent(e);
+    }
+    if (CONTROL_KEYS.indexOf(keyCode) >= 0) {
         if (!e.shiftKey) {
             switch(e.keyCode) {
             case BACKSPACE:
@@ -278,6 +281,7 @@ function keypressHandler(e) {
                 break;
             case ENTER: // submit
                 resetQuestionTimeout();
+                workingBlock.focus();
                 hide(questionBlock);
                 if (answers.indexOf(question.value.toLowerCase()) >= 0) {
                     answers = null;
@@ -293,5 +297,21 @@ function keypressHandler(e) {
                 break;
             }
         }
+        return prevent(e);
     }
+    return true;
+}
+
+function keyPressHandler(e) {
+    e = e || window.event;
+    if (!e.altKey && !e.ctrlKey && !e.metaKey) {
+        if (question.value.length < question.maxLength) {
+            if (e.charCode >= 'А'.charCodeAt(0) && e.charCode <= 'я'.charCodeAt(0)) {
+                question.value += String.fromCharCode(e.charCode);
+            } else if (c = latinToCyrillic[e.charCode]) {
+                question.value += c; // map latins to cyrillic
+            }
+        }
+    }
+    return prevent(e);
 }
