@@ -1,3 +1,6 @@
+/*
+ * CSS specifications for Gargoyle
+ */
 @font-face { /* Modified from Font Squirrel http://www.fontsquirrel.com */
 	font-family: Rurintania;
 	src: url('rurintania.eot'); /* IE9 compat modes */
@@ -23,6 +26,7 @@ body {
 	background: black;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	background: url('background.jpg');
+	cursor: none;
 }
 
 div.visible {
@@ -79,4 +83,5 @@ div.visible {
 	text-transform: lowercase;
 	outline: none;
 	color: black;
+	cursor: none;
 }
