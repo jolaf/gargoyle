@@ -3,15 +3,15 @@
  */
 @font-face { /* Modified from Font Squirrel http://www.fontsquirrel.com */
 	font-family: Rurintania;
-	src: url('rurintania.eot'); /* IE9 compat modes */
+	src: url('font/rurintania.eot'); /* IE9 compat modes */
 	src: local('Rurintania'),
 		local('RurintaniaRegular'),
 		local('Rurintania Regular'),
-		url('rurintania-webfont.eot?#iefix') format('embedded-opentype'), /* IE6-8 */
-		url('rurintania-webfont.woff') format('woff'), /* modern browsers */
-		url('rurintania-webfont.ttf') format('truetype'), /* Safari, Android, iOS */
-		url('rurintania-webfont.svgz#rurintaniaregular') format('svg'), /* legacy iOS */
-		url('rurintania-webfont.svg#rurintaniaregular') format('svg'); /* legacy iOS */
+		url('font/rurintania-webfont.eot?#iefix') format('embedded-opentype'), /* IE6-8 */
+		url('font/rurintania-webfont.woff') format('woff'), /* modern browsers */
+		url('font/rurintania-webfont.ttf') format('truetype'), /* Safari, Android, iOS */
+		url('font/rurintania-webfont.svgz#rurintaniaregular') format('svg'), /* legacy iOS */
+		url('font/rurintania-webfont.svg#rurintaniaregular') format('svg'); /* legacy iOS */
 }
 
 html, body {
@@ -25,7 +25,7 @@ body {
 	color: white;
 	background: black;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	background: url('background.jpg');
+	background: url('images/background.jpg');
 	cursor: none;
 }
 
@@ -59,7 +59,7 @@ div.visible {
 }
 
 #workingBlockID {
-	background: center no-repeat url('gargoyle.png');
+	background: center no-repeat url('images/gargoyle.png');
 	background-size: contain;
 	text-align: center;
 	outline: none;
@@ -73,7 +73,7 @@ div.visible {
 }
 
 #questionID {
-	background: url('question.png') no-repeat 0 6px;
+	background: url('images/question.png') no-repeat 0 6px;
 	font-family: Rurintania, Verdana, Arial, Helvetica, sans-serif;
 	font-size: 32px;
 	width: 279px;
