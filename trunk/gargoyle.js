@@ -2,8 +2,8 @@
 // JavaScript code file for Gargoyle
 //
 var WELCOME = 'Welcome';
-var GRANTED = 'Granted';
-var DENIED = 'Denied';
+var GRANTED = ['Granted1', 'Granted2', 'Granted3', 'Granted4', 'Granted5'];
+var DENIED = ['Denied1', 'Denied2', 'Denied3', 'Denied4', 'Denied5', 'Denied6'];
 
 var AUDIO_TYPES = {'audio/mpeg': 'mp3', 'audio/ogg': 'ogg'};
 
@@ -102,11 +102,11 @@ function createAudio(name) {
     return audio;
 }
 
-function playAudio(audio, what) {
+function playAudio(audio, what, volume) {
     if (audio) {
         audio.pause();
         audio.currentTime = 0;
-        audio.volume = 1;
+        audio.volume = volume ? volume : 1;
         audio.play();
         audio.addEventListener('ended', what, false);
     } else {
@@ -126,7 +126,7 @@ function main() {
     question = document.getElementById('questionID');
     // Setting up audio
     isDesktopBrowser = navigator.userAgent.search(/(ipad)|(iphone)|(ipod)|(android)|(webos)|(mobi)|(mini)/i) < 0;
-    properlyLoaded = (!isDesktopBrowser && window.opera) ? HTMLMediaElement.HAVE_CURRENT_DATA : HTMLMediaElement.HAVE_ENOUGH_DATA;
+    properlyLoaded = HTMLMediaElement.HAVE_CURRENT_DATA; // (!isDesktopBrowser && window.opera) ? HTMLMediaElement.HAVE_CURRENT_DATA : HTMLMediaElement.HAVE_ENOUGH_DATA;
     audioType = null;
     var audio = document.createElement('audio');
     for (var type in AUDIO_TYPES) {
@@ -143,9 +143,19 @@ function main() {
     }
     // Loading riddles
     welcome = createAudio(WELCOME);
-    granted = createAudio(GRANTED);
-    denied = createAudio(DENIED);
-    medias = [[welcome], [granted], [denied]];
+    medias = [[welcome]];
+    granted = [];
+    for (var i = 0, g; g = GRANTED[i++];) {
+        var a = createAudio(g);
+        granted.push(a);
+        medias.push([a]);
+    }
+    denied = [];
+    for (var i = 0, g; g = DENIED[i++];) {
+        var a = createAudio(g);
+        denied.push(a);
+        medias.push([a]);
+    }
     for (var i = 0, riddle; riddle = RIDDLES[i++];) {
         riddle[0] = createAudio(riddle[0]);
         var answers = riddle[1] = riddle[1].split(' ');
@@ -206,8 +216,20 @@ function start(e) {
     questionTimeout = null;
     riddles = [];
     welcome = medias[0][0];
-    granted = medias[1][0];
-    denied = medias[2][0];
+    granted = [];
+    for (var i = 0; i < GRANTED.length; i++) {
+        var m = medias[i + 1][0];
+        if (m) {
+            granted.push(m);
+        }
+    }
+    denied = [];
+    for (var i = 0; i < DENIED.length; i++) {
+        var m = medias[i + 1 + GRANTED.length][0];
+        if (m) {
+            denied.push(m);
+        }
+    }
     question.onmousedown = focus;
     question.onmouseup = focus;
     question.onkeydown = keyDownHandler;
@@ -285,9 +307,9 @@ function keyDownHandler(e) {
                 hide(questionBlock);
                 if (answers.indexOf(question.value.toLowerCase()) >= 0) {
                     answers = null;
-                    playAudio(granted, idle);
+                    playAudio(granted[Math.floor(Math.random() * granted.length)], idle);
                 } else if (question.value) {
-                    playAudio(denied, idle);
+                    playAudio(denied[Math.floor(Math.random() * denied.length)], idle);
                 } else {
                     delay(idle); // avoid repeated keypress
                 }
