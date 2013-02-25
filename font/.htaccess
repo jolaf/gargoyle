@@ -1,0 +1,15 @@
+AddType application/font-woff woff
+AddEncoding gzip svgz
+
+ExpiresActive On
+ExpiresByType application/vnd.ms-fontobject "access plus 10 years"
+ExpiresByType application/x-font-otf "access plus 10 years"
+ExpiresByType application/x-font-ttf "access plus 10 years"
+ExpiresByType application/font-woff "access plus 10 years"
+ExpiresByType image/svg+xml "access plus 10 years"
+
+<FilesMatch "\.(eot|otf|ttf|svg|svgz|woff)$">
+  <IfModule mod_headers.c>
+    Header add Cache-Control public
+  </IfModule>
+</FilesMatch>
