@@ -1,6 +1,6 @@
 Говорящая горгулья, задающая загадки, для ролевых игр по Гарри Поттеру.
 
-# Known Issues
+#### Known Issues
 
 Chrome has cursor non-blinking.
 
